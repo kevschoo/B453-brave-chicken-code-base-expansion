@@ -16,6 +16,9 @@ TagManager:
   - KillBox
   - Platform
   - Victory
+  - Healing
+  - Invincible
+  - SpeedUp
   layers:
   - Default
   - TransparentFX

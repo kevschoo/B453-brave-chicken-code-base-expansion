@@ -20,7 +20,7 @@ public class HUD : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        for (int i = 0; i < player.health; i++)
+       for (int i = 0; i < player.health; i++)
         {
             GameObject imgObject = new GameObject("health");
             RectTransform trans = imgObject.AddComponent<RectTransform>();
@@ -44,6 +44,24 @@ public class HUD : MonoBehaviour
             sprites.Remove(spriteToRemove);
             Destroy(spriteToRemove);
         }
+        if (player.health > sprites.Count)
+        {
+            int x = (int)(player.health - sprites.Count);
+            for(int i = 0; i < x; i++ )
+            {
+                GameObject imgObject = new GameObject("health");
+                RectTransform trans = imgObject.AddComponent<RectTransform>();
+                trans.transform.SetParent(imgObject.transform); // setting parent
+                trans.localScale = Vector3.one;
+                trans.anchoredPosition = new Vector2(startPoint.position.x + sprites.Count * gap, startPoint.position.y);
+                trans.sizeDelta = new Vector2(spriteWidth, spriteHeight); // custom size
+                Image image = imgObject.AddComponent<Image>();
+                image.sprite = healthSprite;
+                imgObject.transform.SetParent(startPoint);
+                sprites.Add(imgObject);
+            }
+            
+        }
     }
 
     private void FixedUpdate()
@@ -56,4 +74,5 @@ public class HUD : MonoBehaviour
             text.text = String.Format("{0:0}:{1:00}", timeSpan.Minutes, timeSpan.Seconds);
         }
     }
+
 }

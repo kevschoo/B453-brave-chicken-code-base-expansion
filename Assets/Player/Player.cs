@@ -31,8 +31,13 @@ public class Player : MonoBehaviour
     public ParticleSystem bloodSys;
     public GameObject materialObject;
     public bool finished;
+    public GameObject ISphere;
+    public GameObject HSphere;
+    public bool isInvincible = false;
+    private bool isHyper = false;
     private uint iframes;
     private bool canDoubleJump = true;
+    private bool canTripleJump = false;
     private bool canDash = true;
     private uint dashTimer = 0;
     private bool sideScroll = false;
@@ -143,6 +148,18 @@ public class Player : MonoBehaviour
                 victoryMenu.SetActive(true);
                 canMove = false;
                 break;
+            case "Healing":
+                Destroy(other.gameObject);
+                RestoreHealth();
+                break;
+            case "Invincible":
+                Destroy(other.gameObject);
+                StartCoroutine(Invincibility());
+                break;
+            case "SpeedUp":
+                Destroy(other.gameObject);
+                StartCoroutine(HyperMode());
+                break;
         }
     }
 
@@ -162,12 +179,39 @@ public class Player : MonoBehaviour
         }
         if (iframes > 0)
         {
+            ISphere.SetActive(true);
             iframes--;
+            if(iframes <= 0)
+            {ISphere.SetActive(false);}
         }
         else if (health > 0)
         {
             materialObject.GetComponent<Renderer>().material.SetColor("RimColor", initColor);
         }
+    }
+
+    IEnumerator Invincibility()
+    {
+        this.isInvincible = true;
+        ISphere.SetActive(true);
+        yield return new WaitForSeconds(7.5f);
+        this.isInvincible = false;
+        ISphere.SetActive(false);
+    }
+
+    IEnumerator HyperMode()
+    {
+        this.isHyper = true;
+        this.canTripleJump = true;
+        this.speed = 12.5f;
+        dashMultiplier = 3.5f;
+        HSphere.SetActive(true);
+        yield return new WaitForSeconds(15f);
+        this.canTripleJump = false;
+        this.speed = 7.5f;
+        this.isHyper = false;
+        dashMultiplier = 3f;
+        HSphere.SetActive(false);
     }
 
     void Update()
@@ -205,6 +249,7 @@ public class Player : MonoBehaviour
             if (characterController.isGrounded)
             {
                 canDoubleJump = true;
+                canTripleJump = true;
                 canDash = true;
                 direction.y = 0;
             }
@@ -214,6 +259,11 @@ public class Player : MonoBehaviour
                 {
                     canDoubleJump = false;
                     direction.y = jumpSpeed;
+                    GetComponents<AudioSource>()[2].Play();
+                }
+                else if (!canDoubleJump && canTripleJump && isHyper) { 
+                    direction.y = jumpSpeed;
+                    canTripleJump = false;
                     GetComponents<AudioSource>()[2].Play();
                 }
                 else if (characterController.isGrounded) { 
@@ -282,7 +332,7 @@ public class Player : MonoBehaviour
 
     void TakeDamage()
     {
-        if (iframes == 0)
+        if (iframes == 0 && isInvincible == false)
         {
             health--;
             GetComponent<AudioSource>().Play();
@@ -295,6 +345,14 @@ public class Player : MonoBehaviour
             materialObject.GetComponent<Renderer>().material.SetColor("RimColor", Color.red);
             iframes = maxIFrames;
             bloodSys.Play();
+        }
+    }
+
+    void RestoreHealth()
+    {
+        if (health < 5)
+        {
+            health++;
         }
     }
 
