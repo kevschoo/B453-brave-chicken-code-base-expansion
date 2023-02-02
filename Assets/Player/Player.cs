@@ -3,6 +3,11 @@ using UnityEngine;
 
 [RequireComponent(typeof(CharacterController))]
 
+//
+//Main changes for Power-Ups code expansion are in this file.
+//
+
+
 public class Player : MonoBehaviour
 {
     public float speed = 7.5f;
@@ -31,13 +36,13 @@ public class Player : MonoBehaviour
     public ParticleSystem bloodSys;
     public GameObject materialObject;
     public bool finished;
-    public GameObject ISphere;
-    public GameObject HSphere;
-    public bool isInvincible = false;
-    private bool isHyper = false;
+    public GameObject ISphere; //New hidden object on player. Enables when power up is active.
+    public GameObject HSphere; //New hidden object on player. Enables when power up is active.
+    public bool isInvincible = false; //Power up state
+    private bool isHyper = false; //Power up state
     private uint iframes;
     private bool canDoubleJump = true;
-    private bool canTripleJump = false;
+    private bool canTripleJump = false; //Power up state
     private bool canDash = true;
     private uint dashTimer = 0;
     private bool sideScroll = false;
@@ -148,7 +153,7 @@ public class Player : MonoBehaviour
                 victoryMenu.SetActive(true);
                 canMove = false;
                 break;
-            case "Healing":
+            case "Healing": //New case for power ups objects
                 Destroy(other.gameObject);
                 RestoreHealth();
                 break;
@@ -190,7 +195,7 @@ public class Player : MonoBehaviour
         }
     }
 
-    IEnumerator Invincibility()
+    IEnumerator Invincibility() //New co-routine for the Invincibility Power Up
     {
         this.isInvincible = true;
         ISphere.SetActive(true);
@@ -199,7 +204,7 @@ public class Player : MonoBehaviour
         ISphere.SetActive(false);
     }
 
-    IEnumerator HyperMode()
+    IEnumerator HyperMode() //New co-routine for the Speed Up Power Up
     {
         this.isHyper = true;
         this.canTripleJump = true;
@@ -261,7 +266,7 @@ public class Player : MonoBehaviour
                     direction.y = jumpSpeed;
                     GetComponents<AudioSource>()[2].Play();
                 }
-                else if (!canDoubleJump && canTripleJump && isHyper) { 
+                else if (!canDoubleJump && canTripleJump && isHyper) { //This was one of the main changes for adding triple jump and speed power up
                     direction.y = jumpSpeed;
                     canTripleJump = false;
                     GetComponents<AudioSource>()[2].Play();
@@ -332,7 +337,7 @@ public class Player : MonoBehaviour
 
     void TakeDamage()
     {
-        if (iframes == 0 && isInvincible == false)
+        if (iframes == 0 && isInvincible == false) //Small change with new bool for invincibily power up
         {
             health--;
             GetComponent<AudioSource>().Play();

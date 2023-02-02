@@ -4,7 +4,11 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-
+//
+// Had to make a change to how the 3 health marks appeared on the UI
+//Before they only deleted them from a set of pre-existing 3 icons
+//now if you collect a heal power up it generates a new one in the right spot
+//
 public class HUD : MonoBehaviour
 {
     public Transform startPoint;

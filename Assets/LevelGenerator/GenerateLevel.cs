@@ -2,9 +2,14 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+//
+// Main Changes for level generation code expansion in this file.
+//
+
+
 public class GenerateLevel : MonoBehaviour
 {  
-
+    //List of room prefabs for the generator
     [SerializeField] GameObject RoomStartPrefab;
     [SerializeField] GameObject RoomEndPrefab;
     [SerializeField] List<GameObject> RoomsPrefab;
@@ -29,8 +34,14 @@ public class GenerateLevel : MonoBehaviour
     //9 = spawn
     //10 = end
 
-
+    //
+    //Ok this code looks kinda bad because I could just make the sequence of coords in the first generate
+    //And not use two of the same functions and too many lists
+    //I was trying to figure out a coordinate bug through the use of two functions
+    //Sometimes overlaps a tile even though the tile coordinate was already taken?
+    //
     List<Vector3> TakenLocations = new List<Vector3>();
+
     void GenerateSequence()
     {
         
