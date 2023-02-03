@@ -10,5 +10,5 @@ Mike Slivka - Level Design, Level Build
 
 https://github.com/francisb1996/brave-chicken
 
-Unity Version: 2011.1.22f1
+Unity Version: 2021.1.22f1
 Main Script Files Changed: Hud, Player, GenerateLevel
